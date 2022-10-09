@@ -1,10 +1,13 @@
 package com.itheima.test;
 
 
+import com.itheima.jedis.util.JedisConnectionFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import redis.clients.jedis.Jedis;
+
+import java.util.Map;
 
 public class JedisTest {
 
@@ -13,7 +16,8 @@ public class JedisTest {
     @BeforeEach
     void setUp() {
         //1.建立连接
-        jedis=new Jedis("192.168.234.134",6379);
+        //jedis=new Jedis("192.168.234.134",6379);
+        jedis= JedisConnectionFactory.getJedis();
         //2、设置密码
         jedis.auth("123321");
         //3、选择库
@@ -37,6 +41,16 @@ public class JedisTest {
         if (jedis!=null){
             jedis.close();
         }
+    }
+    @Test
+    void testHash(){
+        //存储Hash数据
+        jedis.hset("user:1","name","jack");
+        jedis.hset("user:1","age","21");
+
+        Map<String, String> stringStringMap = jedis.hgetAll("user:1");
+        System.out.println(stringStringMap);
+
     }
 
 }
